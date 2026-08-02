@@ -27,8 +27,7 @@ ON CREATE SET
 LOAD CSV WITH HEADERS FROM 'file:///movies.csv' AS row
 MERGE (m:Movie {movieId: toInteger(row.movieId)})
 ON CREATE SET 
-    m.title = row.title,
-    m.year = CASE WHEN row.year <> '' THEN toInteger(row.year) ELSE null END;
+    m.title = row.title;
 
 // Створення вузлів жанрів (Genre) та зв'язків [:IN_GENRE]
 LOAD CSV WITH HEADERS FROM 'file:///movies.csv' AS row
