@@ -80,10 +80,14 @@ ORDER BY clusterSize DESC
 LIMIT 5
 MATCH (u:User {communityId: communityId})-[r:RATED]->(m:Movie)-[:IN_GENRE]->(g:Genre)
 WHERE r.rating >= 4
+WITH communityId, clusterSize, g.name AS genre, count(r) AS genreRatingsCount
+ORDER BY genreRatingsCount DESC
+WITH communityId, clusterSize, collect({genre: genre, count: genreRatingsCount})[0..3] AS top3Genres
+UNWIND top3Genres AS gInfo
 RETURN communityId,
        clusterSize,
-       g.name AS genre,
-       count(r) AS genreRatingsCount
+       gInfo.genre AS genre,
+       gInfo.count AS genreRatingsCount
 ORDER BY clusterSize DESC, genreRatingsCount DESC;
 
 // Крок 5: Видаляємо проєкцію та тимчасові ребра
