@@ -2,13 +2,13 @@
 
 // Крок 1: Матеріалізуємо ребра фільм-фільм через спільних користувачів
 MATCH (m1:Movie)<-[r1:RATED]-(u:User)-[r2:RATED]->(m2:Movie)
-WHERE r1.rating >= 4 AND r2.rating >= 4 AND id(m1) < id(m2)
+WHERE r1.rating >= 5 AND r2.rating >= 5 AND id(m1) < id(m2)
 WITH m1, m2, count(u) AS weight
 WHERE size([(m1)<-[:RATED]-() | 1]) > 20
   AND size([(m2)<-[:RATED]-() | 1]) > 20
 WITH m1, m2, weight
 ORDER BY weight DESC
-LIMIT 50000
+LIMIT 30000
 MERGE (m1)-[co:CO_RATED]-(m2)
 SET co.weight = weight;
 
